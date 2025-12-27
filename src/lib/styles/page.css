@@ -1,11 +1,7 @@
 .app-container {
   min-height: 100vh;
   padding: 24px;
-  background: 
-    radial-gradient(900px 650px at 18% 22%, color-mix(in oklab, var(--blue) 18%, transparent), transparent 60%),
-    radial-gradient(800px 500px at 82% 30%, color-mix(in oklab, var(--sapphire) 16%, transparent), transparent 62%),
-    radial-gradient(900px 700px at 50% 110%, color-mix(in oklab, var(--lavender) 12%, transparent), transparent 60%),
-    linear-gradient(180deg, var(--crust), var(--base));
+  background: var(--base);
 }
 
 .header {
@@ -34,26 +30,23 @@
 
 .mode-btn {
   padding: 12px 24px;
-  border-radius: 12px;
-  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
-  background: color-mix(in oklab, var(--surface0) 70%, transparent);
+  border-radius: 8px;
+  border: 1px solid var(--surface2);
+  background: var(--surface0);
   color: var(--text);
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.15s ease;
   text-transform: capitalize;
 }
 
 .mode-btn:hover {
-  transform: translateY(-2px);
-  background: color-mix(in oklab, var(--surface1) 80%, transparent);
-  border-color: color-mix(in oklab, var(--blue) 55%, var(--surface2));
-  box-shadow: 0 8px 20px color-mix(in oklab, black 30%, transparent);
+  background: var(--surface1);
 }
 
 .mode-btn.active {
-  background: color-mix(in oklab, var(--blue) 85%, transparent);
+  background: var(--blue);
   color: var(--crust);
   border-color: var(--blue);
 }
@@ -66,12 +59,11 @@
   background: var(--surface2);
   color: var(--text);
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.85rem;
   white-space: nowrap;
-  box-shadow: 0 4px 12px color-mix(in oklab, black 40%, transparent);
-  animation: fadeIn 0.2s ease;
   z-index: 10;
+  pointer-events: none;
 }
 
 .tooltip-arrow {
@@ -87,11 +79,10 @@
 }
 
 .content-area {
-  background: color-mix(in oklab, var(--surface0) 82%, transparent);
-  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
-  border-radius: 16px;
+  background: var(--surface0);
+  border: 1px solid var(--surface1);
+  border-radius: 8px;
   padding: 32px;
-  box-shadow: 0 20px 60px color-mix(in oklab, black 45%, transparent);
   max-width: 1200px;
 }
 
@@ -138,20 +129,19 @@
 
 .event-input {
   width: 100%;
-  padding: 16px 20px;
-  font-size: 1.1rem;
-  border: 2px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  padding: 14px 16px;
+  font-size: 1rem;
+  border: 1px solid var(--surface2);
   background: var(--mantle);
   color: var(--text);
-  border-radius: 12px;
+  border-radius: 6px;
   outline: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.15s ease;
   font-family: monospace;
 }
 
 .event-input:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--blue) 20%, transparent);
 }
 
 .event-input::placeholder {
@@ -159,21 +149,19 @@
 }
 
 .fetch-btn {
-  padding: 14px 32px;
+  padding: 12px 24px;
   background: var(--blue);
   color: var(--crust);
   border: none;
-  border-radius: 12px;
+  border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.15s ease;
 }
 
 .fetch-btn:hover {
   background: var(--sapphire);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px color-mix(in oklab, var(--blue) 40%, transparent);
 }
 
 /* Manual Mode */
@@ -189,18 +177,19 @@
 }
 
 .add-col-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 2px solid var(--blue);
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid var(--blue);
   background: transparent;
   color: var(--blue);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  font-weight: 300;
 }
 
 .add-col-btn:hover {
@@ -210,8 +199,8 @@
 
 .table-wrapper {
   overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  border-radius: 6px;
+  border: 1px solid var(--surface2);
 }
 
 .data-table {
@@ -235,13 +224,14 @@
 
 .delete-col-btn {
   margin-left: 8px;
-  padding: 2px 6px;
-  background: var(--red, #f38ba8);
+  padding: 2px 8px;
+  background: #f38ba8;
   color: var(--crust);
   border: none;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
 .delete-col-btn:hover {
@@ -249,12 +239,11 @@
 }
 
 .actions-col {
-  width: 60px;
+  width: 100px;
 }
 
 .data-table tbody tr {
   background: var(--mantle);
-  transition: background 0.2s ease;
 }
 
 .data-table tbody tr:hover {
@@ -263,19 +252,19 @@
 
 .data-table td {
   padding: 8px;
-  border-bottom: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  border-bottom: 1px solid var(--surface2);
 }
 
 .cell-input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  border: 1px solid var(--surface2);
   background: var(--base);
   color: var(--text);
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .cell-input:focus {
@@ -283,14 +272,14 @@
 }
 
 .delete-row-btn {
-  padding: 6px 10px;
-  background: var(--red, #f38ba8);
+  padding: 6px 12px;
+  background: #f38ba8;
   color: var(--crust);
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 0.85rem;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.15s ease;
 }
 
 .delete-row-btn:hover {
@@ -303,34 +292,23 @@
   background: var(--blue);
   color: var(--crust);
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease;
 }
 
 .add-row-btn:hover {
   background: var(--sapphire);
-  transform: translateY(-1px);
 }
 
 .plus-icon {
   font-size: 1.2rem;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  font-weight: 300;
 }
 
 @media (max-width: 640px) {
