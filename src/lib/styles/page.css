@@ -1,0 +1,346 @@
+.app-container {
+  min-height: 100vh;
+  padding: 24px;
+  background: 
+    radial-gradient(900px 650px at 18% 22%, color-mix(in oklab, var(--blue) 18%, transparent), transparent 60%),
+    radial-gradient(800px 500px at 82% 30%, color-mix(in oklab, var(--sapphire) 16%, transparent), transparent 62%),
+    radial-gradient(900px 700px at 50% 110%, color-mix(in oklab, var(--lavender) 12%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--crust), var(--base));
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-wrapper {
+  position: relative;
+}
+
+.mode-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  background: color-mix(in oklab, var(--surface0) 70%, transparent);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+}
+
+.mode-btn:hover {
+  transform: translateY(-2px);
+  background: color-mix(in oklab, var(--surface1) 80%, transparent);
+  border-color: color-mix(in oklab, var(--blue) 55%, var(--surface2));
+  box-shadow: 0 8px 20px color-mix(in oklab, black 30%, transparent);
+}
+
+.mode-btn.active {
+  background: color-mix(in oklab, var(--blue) 85%, transparent);
+  color: var(--crust);
+  border-color: var(--blue);
+}
+
+.tooltip {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px color-mix(in oklab, black 40%, transparent);
+  animation: fadeIn 0.2s ease;
+  z-index: 10;
+}
+
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--surface2);
+}
+
+.content-area {
+  background: color-mix(in oklab, var(--surface0) 82%, transparent);
+  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 20px 60px color-mix(in oklab, black 45%, transparent);
+  max-width: 1200px;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--subtext0);
+}
+
+.placeholder svg {
+  margin: 0 auto 16px;
+  color: var(--blue);
+}
+
+.placeholder h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.placeholder p {
+  font-size: 1rem;
+  color: var(--subtext0);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  color: var(--text);
+  font-weight: 700;
+  margin-top: 0;
+}
+
+/* Auto Mode */
+.auto-mode {
+  max-width: 500px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.event-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 1.1rem;
+  border: 2px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  background: var(--mantle);
+  color: var(--text);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: monospace;
+}
+
+.event-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--blue) 20%, transparent);
+}
+
+.event-input::placeholder {
+  color: var(--subtext0);
+}
+
+.fetch-btn {
+  padding: 14px 32px;
+  background: var(--blue);
+  color: var(--crust);
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fetch-btn:hover {
+  background: var(--sapphire);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--blue) 40%, transparent);
+}
+
+/* Manual Mode */
+.manual-mode {
+  width: 100%;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-col-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid var(--blue);
+  background: transparent;
+  color: var(--blue);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.add-col-btn:hover {
+  background: var(--blue);
+  color: var(--crust);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table thead tr {
+  background: var(--surface1);
+}
+
+.data-table th {
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--blue);
+  text-align: left;
+  font-weight: 700;
+  color: var(--text);
+  position: relative;
+}
+
+.delete-col-btn {
+  margin-left: 8px;
+  padding: 2px 6px;
+  background: var(--red, #f38ba8);
+  color: var(--crust);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.delete-col-btn:hover {
+  opacity: 0.8;
+}
+
+.actions-col {
+  width: 60px;
+}
+
+.data-table tbody tr {
+  background: var(--mantle);
+  transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background: var(--surface0);
+}
+
+.data-table td {
+  padding: 8px;
+  border-bottom: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+}
+
+.cell-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in oklab, var(--surface2), 55% transparent);
+  background: var(--base);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.cell-input:focus {
+  border-color: var(--blue);
+}
+
+.delete-row-btn {
+  padding: 6px 10px;
+  background: var(--red, #f38ba8);
+  color: var(--crust);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease;
+}
+
+.delete-row-btn:hover {
+  opacity: 0.8;
+}
+
+.add-row-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: var(--blue);
+  color: var(--crust);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.add-row-btn:hover {
+  background: var(--sapphire);
+  transform: translateY(-1px);
+}
+
+.plus-icon {
+  font-size: 1.2rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .content-area {
+    padding: 20px;
+  }
+}
