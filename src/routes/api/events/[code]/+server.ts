@@ -1,13 +1,12 @@
-// FILE: src/routes/api/events/[code]/+server.ts
-
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-// TODO: Replace with actual FTC Scout API base URL
-const FTC_API_BASE_URL = 'https://ftc-api.firstinspires.org/v2.0';
+const FTC_API_BASE_URL = 'https://api.ftcscout.org/rest/v1';
+const CURRENT_SEASON = 2025;
 
-export const GET: RequestHandler = async ({ params, fetch }) => {
+export const GET: RequestHandler = async ({ params, url }) => {
   const { code } = params;
+  const season = parseInt(url.searchParams.get('season') || String(CURRENT_SEASON));
 
   if (!code) {
     return json(
@@ -17,15 +16,9 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
   }
 
   try {
-    // TODO: Replace with actual FTC Scout API endpoint
-    // This is a placeholder implementation
-    const response = await fetch(`${FTC_API_BASE_URL}/events/${code}`, {
-      headers: {
-        'Accept': 'application/json',
-        // TODO: Add authentication headers if required
-        // 'Authorization': `Bearer ${API_KEY}`
-      }
-    });
+    const apiUrl = `${FTC_API_BASE_URL}/events/${season}/${code}/teams`;
+
+    const response = await fetch(apiUrl);
 
     if (!response.ok) {
       return json(
@@ -34,13 +27,12 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
       );
     }
 
-    const data = await response.json();
+    const teams = await response.json();
 
-    // Transform the data if needed
     return json({
       eventCode: code,
-      teams: data.teams || [],
-      ...data
+      season,
+      teams
     });
 
   } catch (error) {

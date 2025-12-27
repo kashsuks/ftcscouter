@@ -1,12 +1,27 @@
+const FTC_API_BASE_URL = 'https://api.ftcscout.org/rest/v1';
+const CURRENT_SEASON = 2025;
+
 export interface EventData {
     eventCode: string;
-    teams: TeamData[];
+    teams: TeamEventParticipation[];
+}
+
+export interface TeamEventParticipation {
+    teamNumber: number;
+    stats?: TeamStats;
+}
+
+export interface TeamStats {
+    opr?: number;
+    autoAvg?: number;
+    dcAvg?: number;
+    egAvg?: number
+    //other fields
 }
 
 export interface TeamData {
-    teamNumber: string;
-    teamName: string;
-    stats?: Record<string, unknown>;
+    teamNumber: number;
+    teamName?: string;
 }
 
 /**
@@ -14,17 +29,30 @@ export interface TeamData {
  * @param eventCode The event code to fetch data for
  * @returns Promise with event data
  */
-export async function fetchEventData(eventCode: string): Promise<EventData> {
+export async function fetchEventData(eventCode: string, season: number = CURRENT_SEASON): Promise<EventData> {
     try {
-        //TODO: replace with the actual ftc scout api endpoint
-        const response = await fetch(`/api/events/${eventCode}`);
+        const url = `${FTC_API_BASE_URL}/events/${season}/${eventCode}/teams`;
+
+        console.log(`Fetching teams from: ${url}`)
+
+        const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch event data: ${response.statusText}`);
+            throw new Error(`Failed to fetch event data: ${response.statusText} (${response.status})`);
         }
 
-        const data = await response.json();
-        return data;
+        const teams: TeamEventParticipation[] = await response.json()
+
+        console.log('=== EVENT TEAMS ===');
+        console.log(`Event code: ${eventCode}`)
+        console.log(`Season: ${season}`)
+        console.log(`Total teams: ${teams.length}`)
+        console.log(`Teams:`, teams)
+
+        return {
+            eventCode, 
+            teams
+        };
     } catch (error) {
         console.error('Error fetching event data:', error)
         throw error;
@@ -38,51 +66,4 @@ export async function fetchEventData(eventCode: string): Promise<EventData> {
  */
 export function isValidEventCode(eventCode: string): boolean {
     return eventCode.trim().length > 0 && /^[A-Z0-9]+$/i.test(eventCode.trim())
-}
-
-/**
- * Prompts the user for a column name
- * @returns The column name or null if cancelled
- */
-export function promptColumnName(): string | null {
-    const name = prompt('Enter column name:');
-    return name?.trim() || null;
-}
-
-/**
- * Shows an alerts message
- * @param message The message to display
- */
-export function showAlert(message: string): void {
-    alert(message);
-}
-
-/**
- * Exports table data to CSV format
- * @param columns Column headers
- * @param rows Table data rows
- * @returns CSV string
- */
-export function exportToCSV(columns: string[], rows: string[][]): string {
-    const csvRows = [
-        columns.join(','),
-        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ];
-    return csvRows.join('\n');
-}
-
-/**
- * Downloads a string as a file
- * @param content File content
- * @param filename Desired filename
- * @param mimeType MIME type of the file
- */
-export function downloadFile(content: string, filename: string, mimeType: string = 'text/plain'): void {
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
 }
