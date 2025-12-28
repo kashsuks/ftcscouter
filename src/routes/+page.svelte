@@ -10,6 +10,15 @@
   let customColumns: string[] = [];
   let customData: Record<number, Record<string, string>> = {};
 
+  interface Matchup {
+    red1: string;
+    red2: string;
+    blue1: string;
+    blue2: string;
+  }
+
+  let matchups: Matchup[] = [{red1: '', red2: '', blue1: '', blue2: ''}]
+
   async function handleFetchEventData() {
     if (!eventCode.trim()) {
       showAlert('Please enter an event code');
@@ -86,6 +95,20 @@
       customData[teamNumber] = {};
     }
     customData[teamNumber][column] = value;
+  }
+
+  function addMatchup() {
+    matchups = [...matchups, {red1: '', red2: '', blue1: '', blue2: ''}];
+  }
+
+  function deleteMatchup(index: number) {
+    if (matchups.length > 1) {
+      matchups = matchups.filter((_, i) => i !== index);
+    }
+  }
+
+  function updateMatchup(index: number, field: keyof Matchup, value: string) {
+    matchups[index][field] = value;
   }
 </script>
 
@@ -168,6 +191,57 @@
               {/each}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="matchups-section">
+        <div class="matchups-header">
+          <h3 class="table-title">Matchups</h3>
+          <button class="add-matchup-btn" on:click={addMatchup} title="Add Matchup">
+            +
+          </button>
+        </div>
+
+        <div class="matchups-container">
+          {#each matchups as matchup, index}
+            <div class="matchup-row">
+              <div class="matchup-alliance red-alliance">
+                <input
+                  type="text"
+                  value={matchup.red1}
+                  on:input={(e) => updateMatchup(index, 'red1', e.currentTarget.value)}
+                  class="matchup-input red-input"
+                  placeholder="Red 1"
+                />
+                <input
+                  type="text"
+                  value={matchup.red2}
+                  on:input={(e) => updateMatchup(index, 'red2', e.currentTarget.value)}
+                  class="matchup-input red-input"
+                  placeholder="Red 2"
+                />
+                <input
+                  type="text"
+                  value={matchup.blue1}
+                  on:input={(e) => updateMatchup(index, 'blue1', e.currentTarget.value)}
+                  class="matchup-input blue-input"
+                  placeholder="Blue 1"
+                />
+                <input
+                  type="text"
+                  value={matchup.blue2}
+                  on:input={(e) => updateMatchup(index, 'blue2', e.currentTarget.value)}
+                  class="matchup-input blue-input"
+                  placeholder="Blue 2"
+                />
+              </div>
+              {#if matchups.length > 1}
+                <button class="delete-matchup-btn" on:click={() => deleteMatchup(index)}>
+                  x
+                </button>
+              {/if}
+            </div>
+          {/each}
         </div>
       </div>
     {/if}

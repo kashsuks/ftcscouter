@@ -250,6 +250,83 @@
   opacity: 0.8;
 }
 
+.matchups-section {
+  width: 100%;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--surface2);
+}
+
+.matchups-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.add-matchup-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--blue);
+  background: transparent;
+  color: var(--blue);
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-weight: 300;
+}
+
+.red-input {
+  border-color: #f38ba8;
+  background: rgba(243, 139, 168, 0.1);
+}
+
+.red-input:focus {
+  border-color: #f38ba8;
+  background: rgba(243, 139, 168, 0.15);
+}
+
+.red-input::placeholder {
+  color: rgba(243, 139, 168, 0.5);
+}
+
+.blue-input {
+  border-color: var(--blue);
+  background: rgba(137, 180, 250, 0.1);
+}
+
+.blue-input:focus {
+  border-color: var(--blue);
+  background: rgba(137, 180, 250, 0.15);
+}
+
+.blue-input::placeholder {
+  color: rgba(137, 180, 250, 0.5);
+}
+
+.delete-matchup-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: #f38ba8;
+  color: var(--crust);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+
+.delete-matchup-btn:hover {
+  opacity: 0.8;
+}
+
 @media (max-width: 640px) {
   .content-area {
     padding: 20px;
