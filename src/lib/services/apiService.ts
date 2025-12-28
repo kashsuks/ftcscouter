@@ -7,21 +7,36 @@ export interface EventData {
 }
 
 export interface TeamEventParticipation {
+    season: number;
+    eventCode: string;
     teamNumber: number;
     stats?: TeamStats;
 }
 
 export interface TeamStats {
     opr?: number;
-    autoAvg?: number;
-    dcAvg?: number;
-    egAvg?: number
+    dpr?: number;
+    autoOpr?: number;
+    dcOpr?: number;
+    egOpr?: number
+    rank?: number
+    rp?: number
+    wins?: number;
+    losses?: number;
+    ties?: number;
     //other fields
 }
 
 export interface TeamData {
     teamNumber: number;
     teamName?: string;
+    schoolName?: string;
+    sponsors?: string;
+    city?: string;
+    stateProv?: string;
+    country?: string;
+    rookieYear?: number;
+    // other scalar fields as neede
 }
 
 /**
