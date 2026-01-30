@@ -189,6 +189,9 @@
 .data-table tbody tr {
   background: var(--mantle);
   border-bottom: 1px solid var(--surface2);
+  cursor: move;
+  user-select: none;
+  transition: opacity 0.2s ease;
 }
 
 .data-table tbody tr:last-child {
@@ -197,6 +200,10 @@
 
 .data-table tbody tr:hover {
   background: var(--surface0);
+}
+
+.data-table tbody tr.dragging {
+  opacity: 0.5;
 }
 
 .data-table td {
@@ -211,6 +218,23 @@
 .number-cell {
   font-family: monospace;
   color: var(--subtext0);
+}
+
+.draggable-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drag-handle {
+  color: var(--subtext0);
+  font-size: 1rem;
+  cursor: grab;
+  user-select: none;
+}
+
+.data-table tbody tr:active .drag-handle {
+  cursor: grabbing;
 }
 
 .cell-input {
@@ -250,6 +274,7 @@
   opacity: 0.8;
 }
 
+/* Matchups Section */
 .matchups-section {
   width: 100%;
   margin-top: 48px;
@@ -262,6 +287,13 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 16px;
+}
+
+.matchup-hint {
+  margin: 12px 0 24px 0;
+  color: var(--subtext0);
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
 .add-matchup-btn {
@@ -280,32 +312,158 @@
   font-weight: 300;
 }
 
-.red-input {
+.add-matchup-btn:hover {
+  background: var(--blue);
+  color: var(--crust);
+}
+
+.matchups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.matchup-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+  background: var(--mantle);
+  border: 1px solid var(--surface2);
+  border-radius: 8px;
+}
+
+.matchup-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.alliance {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alliance-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.red-alliance .alliance-label {
+  color: #f38ba8;
+}
+
+.blue-alliance .alliance-label {
+  color: var(--blue);
+}
+
+.alliance-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-slot {
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 2px dashed var(--surface2);
+  background: var(--base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.team-slot.red-slot {
+  border-color: rgba(243, 139, 168, 0.3);
+}
+
+.team-slot.blue-slot {
+  border-color: rgba(137, 180, 250, 0.3);
+}
+
+.team-slot:hover {
+  border-style: solid;
+}
+
+.team-slot.red-slot:hover {
+  border-color: rgba(243, 139, 168, 0.6);
+  background: rgba(243, 139, 168, 0.05);
+}
+
+.team-slot.blue-slot:hover {
+  border-color: rgba(137, 180, 250, 0.6);
+  background: rgba(137, 180, 250, 0.05);
+}
+
+.team-slot.has-team {
+  border-style: solid;
+  justify-content: space-between;
+}
+
+.team-slot.has-team.red-slot {
   border-color: #f38ba8;
   background: rgba(243, 139, 168, 0.1);
 }
 
-.red-input:focus {
-  border-color: #f38ba8;
-  background: rgba(243, 139, 168, 0.15);
-}
-
-.red-input::placeholder {
-  color: rgba(243, 139, 168, 0.5);
-}
-
-.blue-input {
+.team-slot.has-team.blue-slot {
   border-color: var(--blue);
   background: rgba(137, 180, 250, 0.1);
 }
 
-.blue-input:focus {
-  border-color: var(--blue);
-  background: rgba(137, 180, 250, 0.15);
+.slot-placeholder {
+  color: var(--subtext0);
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
-.blue-input::placeholder {
-  color: rgba(137, 180, 250, 0.5);
+.slot-team {
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: monospace;
+}
+
+.team-slot.has-team.red-slot .slot-team {
+  color: #f38ba8;
+}
+
+.team-slot.has-team.blue-slot .slot-team {
+  color: var(--blue);
+}
+
+.clear-slot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.clear-slot:hover {
+  background: #f38ba8;
+  color: var(--crust);
+}
+
+.vs-separator {
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--subtext0);
+  padding: 0 12px;
 }
 
 .delete-matchup-btn {
@@ -321,6 +479,7 @@
   align-items: center;
   justify-content: center;
   transition: opacity 0.15s ease;
+  flex-shrink: 0;
 }
 
 .delete-matchup-btn:hover {
@@ -336,5 +495,14 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .matchup-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .vs-separator {
+    padding: 8px 0;
   }
 }

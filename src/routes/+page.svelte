@@ -1,4 +1,3 @@
-<!-- FILE: src/routes/+page.svelte -->
 <script lang="ts">
   import { fetchEventData, isValidEventCode } from '$lib/services/apiService';
   import type { TeamEventParticipation } from '$lib/services/apiService';
@@ -18,6 +17,7 @@
   }
 
   let matchups: Matchup[] = [{red1: '', red2: '', blue1: '', blue2: ''}]
+  let draggedTeam: number | null = null;
 
   async function handleFetchEventData() {
     if (!eventCode.trim()) {
@@ -110,6 +110,30 @@
   function updateMatchup(index: number, field: keyof Matchup, value: string) {
     matchups[index][field] = value;
   }
+
+  function handleDragStart(teamNumber: number) {
+    draggedTeam = teamNumber;
+  }
+
+  function handleDragEnd() {
+    draggedTeam = null;
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent, matchupIndex: number, field: keyof Matchup) {
+    event.preventDefault();
+    if (draggedTeam !== null) {
+      updateMatchup(matchupIndex, field, String(draggedTeam));
+      draggedTeam = null;
+    }
+  }
+
+  function clearMatchupSlot(matchupIndex: number, field: keyof Matchup) {
+    updateMatchup(matchupIndex, field, '');
+  }
 </script>
 
 <svelte:head>
@@ -170,8 +194,16 @@
             </thead>
             <tbody>
               {#each teams as team}
-                <tr>
-                  <td class="number-cell">{team.teamNumber}</td>
+                <tr 
+                  draggable="true"
+                  on:dragstart={() => handleDragStart(team.teamNumber)}
+                  on:dragend={handleDragEnd}
+                  class:dragging={draggedTeam === team.teamNumber}
+                >
+                  <td class="number-cell draggable-cell">
+                    <span class="drag-handle">⋮⋮</span>
+                    {team.teamNumber}
+                  </td>
                   {#each customColumns as col}
                     <td>
                       <input
@@ -201,43 +233,90 @@
             +
           </button>
         </div>
+        <p class="matchup-hint">Drag teams from the table above and drop them into the slots below</p>
 
         <div class="matchups-container">
           {#each matchups as matchup, index}
             <div class="matchup-row">
-              <div class="matchup-alliance red-alliance">
-                <input
-                  type="text"
-                  value={matchup.red1}
-                  on:input={(e) => updateMatchup(index, 'red1', e.currentTarget.value)}
-                  class="matchup-input red-input"
-                  placeholder="Red 1"
-                />
-                <input
-                  type="text"
-                  value={matchup.red2}
-                  on:input={(e) => updateMatchup(index, 'red2', e.currentTarget.value)}
-                  class="matchup-input red-input"
-                  placeholder="Red 2"
-                />
-                <input
-                  type="text"
-                  value={matchup.blue1}
-                  on:input={(e) => updateMatchup(index, 'blue1', e.currentTarget.value)}
-                  class="matchup-input blue-input"
-                  placeholder="Blue 1"
-                />
-                <input
-                  type="text"
-                  value={matchup.blue2}
-                  on:input={(e) => updateMatchup(index, 'blue2', e.currentTarget.value)}
-                  class="matchup-input blue-input"
-                  placeholder="Blue 2"
-                />
+              <div class="matchup-content">
+                <div class="alliance red-alliance">
+                  <div class="alliance-label">Red Alliance</div>
+                  <div class="alliance-slots">
+                    <div 
+                      class="team-slot red-slot"
+                      class:has-team={matchup.red1}
+                      on:dragover={handleDragOver}
+                      on:drop={(e) => handleDrop(e, index, 'red1')}
+                      role="button"
+                      tabindex="0"
+                    >
+                      {#if matchup.red1}
+                        <span class="slot-team">{matchup.red1}</span>
+                        <button class="clear-slot" on:click={() => clearMatchupSlot(index, 'red1')}>×</button>
+                      {:else}
+                        <span class="slot-placeholder">Drop team 1</span>
+                      {/if}
+                    </div>
+                    <div 
+                      class="team-slot red-slot"
+                      class:has-team={matchup.red2}
+                      on:dragover={handleDragOver}
+                      on:drop={(e) => handleDrop(e, index, 'red2')}
+                      role="button"
+                      tabindex="0"
+                    >
+                      {#if matchup.red2}
+                        <span class="slot-team">{matchup.red2}</span>
+                        <button class="clear-slot" on:click={() => clearMatchupSlot(index, 'red2')}>×</button>
+                      {:else}
+                        <span class="slot-placeholder">Drop team 2</span>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vs-separator">VS</div>
+
+                <div class="alliance blue-alliance">
+                  <div class="alliance-label">Blue Alliance</div>
+                  <div class="alliance-slots">
+                    <div 
+                      class="team-slot blue-slot"
+                      class:has-team={matchup.blue1}
+                      on:dragover={handleDragOver}
+                      on:drop={(e) => handleDrop(e, index, 'blue1')}
+                      role="button"
+                      tabindex="0"
+                    >
+                      {#if matchup.blue1}
+                        <span class="slot-team">{matchup.blue1}</span>
+                        <button class="clear-slot" on:click={() => clearMatchupSlot(index, 'blue1')}>×</button>
+                      {:else}
+                        <span class="slot-placeholder">Drop team 1</span>
+                      {/if}
+                    </div>
+                    <div 
+                      class="team-slot blue-slot"
+                      class:has-team={matchup.blue2}
+                      on:dragover={handleDragOver}
+                      on:drop={(e) => handleDrop(e, index, 'blue2')}
+                      role="button"
+                      tabindex="0"
+                    >
+                      {#if matchup.blue2}
+                        <span class="slot-team">{matchup.blue2}</span>
+                        <button class="clear-slot" on:click={() => clearMatchupSlot(index, 'blue2')}>×</button>
+                      {:else}
+                        <span class="slot-placeholder">Drop team 2</span>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
               </div>
+
               {#if matchups.length > 1}
                 <button class="delete-matchup-btn" on:click={() => deleteMatchup(index)}>
-                  x
+                  ×
                 </button>
               {/if}
             </div>
