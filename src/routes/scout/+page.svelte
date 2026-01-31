@@ -3,11 +3,14 @@
   import type { TeamEventParticipation } from '$lib/services/apiService';
   import { showAlert, promptColumnName } from '$lib/utils';
   import '$lib/styles/page.css';
+  import { onMount } from 'svelte';
 
   let eventCode = '';
   let teams: TeamEventParticipation[] = [];
   let customColumns: string[] = [];
   let customData: Record<number, Record<string, string>> = {};
+  let scoutId: string | null = null;
+  let scoutName: string = '';
 
   interface Matchup {
     red1: string;
@@ -16,8 +19,89 @@
     blue2: string;
   }
 
+  interface ScoutData {
+    id: string;
+    name: string;
+    eventCode: string;
+    teams: TeamEventParticipation[];
+    customColumns: string[];
+    customData: Record<number, Record<string, string>>;
+    matchups: Matchup[];
+    savedAt: number;
+  }
+
   let matchups: Matchup[] = [{red1: '', red2: '', blue1: '', blue2: ''}]
   let draggedTeam: number | null = null;
+
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const loadId = urlParams.get('load');
+
+    if (loadId) {
+        loadScout(loadId);
+    }
+  });
+
+  function loadScout(id: string) {
+    const savedData = localStorage.getItem(`ftc-scout-${id}`);
+    if (savedData) {
+      const scout: ScoutData = JSON.parse(savedData);
+      scoutId = scout.id;
+      scoutName = scout.name;
+      eventCode = scout.eventCode;
+      teams = scout.teams;
+      customColumns = scout.customColumns;
+      customData = scout.customData;
+      matchups = scout.matchups;
+    }
+  }
+
+  function saveScout() {
+    const name = prompt('Name this scout:', scoutName || eventCode || 'Untitled Scout');
+    if (!name) return;
+
+    scoutName = name;
+    
+    if (!scoutId) {
+      scoutId = Date.now().toString();
+    }
+
+    const scoutData: ScoutData = {
+      id: scoutId,
+      name: scoutName,
+      eventCode,
+      teams,
+      customColumns,
+      customData,
+      matchups,
+      savedAt: Date.now()
+    };
+
+    // Save the scout data
+    localStorage.setItem(`ftc-scout-${scoutId}`, JSON.stringify(scoutData));
+
+    // Update the saves list
+    const savedListData = localStorage.getItem('ftc-scouts');
+    let savesList = savedListData ? JSON.parse(savedListData) : [];
+    
+    const existingIndex = savesList.findIndex((s: any) => s.id === scoutId);
+    const saveEntry = {
+      id: scoutId,
+      name: scoutName,
+      eventCode,
+      savedAt: Date.now()
+    };
+
+    if (existingIndex >= 0) {
+      savesList[existingIndex] = saveEntry;
+    } else {
+      savesList.push(saveEntry);
+    }
+
+    localStorage.setItem('ftc-scouts', JSON.stringify(savesList));
+    
+    alert('Scout saved successfully!');
+  }
 
   async function handleFetchEventData() {
     if (!eventCode.trim()) {
@@ -134,16 +218,28 @@
   function clearMatchupSlot(matchupIndex: number, field: keyof Matchup) {
     updateMatchup(matchupIndex, field, '');
   }
+
+  function goBack() {
+    window.location.href = '/';
+  }
 </script>
 
 <svelte:head>
-  <title>FTCScouter</title>
+  <title>Scout - FTCScouter</title>
 </svelte:head>
 
 <div class="app-container">
   <div class="header">
-    <h1 class="app-title">FTCScouter</h1>
-    <p class="app-subtitle">Scout the right way</p>
+    <div class="header-left">
+      <button class="back-btn" on:click={goBack} title="Back to home">←</button>
+      <div>
+        <h1 class="app-title">FTCScouter</h1>
+        <p class="app-subtitle">Scout the right way</p>
+      </div>
+    </div>
+    <button class="save-btn" on:click={saveScout}>
+      Save
+    </button>
   </div>
 
   <div class="content-area">
@@ -326,3 +422,72 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--surface2);
+    background: var(--surface0);
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+
+  .back-btn:hover {
+    background: var(--surface1);
+    border-color: var(--blue);
+  }
+
+  .save-btn {
+    padding: 12px 32px;
+    background: var(--blue);
+    color: var(--base);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .save-btn:hover {
+    background: var(--sapphire);
+    transform: translateY(-2px);
+  }
+
+  .save-btn:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .header-left {
+      gap: 12px;
+    }
+
+    .save-btn {
+      padding: 10px 24px;
+      font-size: 0.95rem;
+    }
+  }
+</style>
